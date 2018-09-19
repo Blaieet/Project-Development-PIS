@@ -1,0 +1,161 @@
+@startuml
+
+
+title Diagrama de Classes de Holy Rush
+
+package Vista {
+  class GameSurfaceView{
+    +-running[:boolean]
+    +-gameThread[:Thread]
+    +-sensorManager[:SensorManager]
+    +-person[:Person]
+    +-context[:Context]
+    +-b[:Bitmap]
+    
+    ++step()
+    ++render()
+    ++run()
+    ++init()
+    ++resume()
+    ++pause()
+    ++onSensorChanged()
+    ++update()
+    ++checkColisions()
+  }
+}
+
+package Controlador {
+    class MainActivity {
+      +-play[:ImageButton]
+      +-shop[:ImageButton]
+      +-infinity[:ImageButton]
+      +-options[:list[Administrador]
+      +-jukebox[:JukeBox]
+      +-settings[:Settings]
+      
+      ++setOnClickListener()
+      ++onClick()
+      ++play()
+      ++recuperarTop()
+    }
+      
+    
+    class GameActivity {
+      +-gameView[:GameSurfaceView]
+      +-exitButton[:Button]
+      +-pauseButton[:Button]
+      +-crono[:Chronometer]
+      +-settings[:Settings]
+      
+      ++onCreate()
+      ++setOnClickListener()
+      ++onPause()
+      ++onResume()
+      ++onGameOver()
+      ++guardarDades()
+      ++recuperarDades()
+      ++startCrono()
+      ++stopCrono()
+      ++restartCrono()
+      ++guardarDades()
+    }
+    
+    class OptionsActivity {
+      +-back[:ImageButton]
+      +-length[:int]
+      +-settings[:Settings]
+      +-jukebox[:JukeBox]
+      
+      ++onCreate()
+      ++setOnClickListener()
+    }
+    
+        class GameOverActivity {
+      +-exit[:Button]
+      +-replay[:Button]
+      
+      ++onCreate()
+      ++setOnClickListener()
+    }
+}
+
+
+package Model {
+    class GameData {
+        +-sprites[:ArrayList]
+        +-throne[:Throne]
+        
+        ++loadSprites()
+    }
+    
+    class Settings {
+        +-music[:boolean]
+        +-soundFX[:boolean]
+        +-score[:long]
+    }
+    
+    class Throne {
+      +-hitBox[:Rect]
+      +-acceleration[:float]
+      
+      
+      ++setRoll()
+      ++update()
+      ++setAcceleration()
+    }
+    
+    class Background {
+      +-image[:Sprite]
+      +-screenX[:int]
+      +-screenY[:int]
+      +-speed[:int]
+      ++update()
+    }
+
+    class Person{
+      +-hitBox[:Rect]
+      
+      ++upDate()
+    }
+    
+    class JukeBox{
+        +-player[:MediaPlayer]
+        +-id[:int]
+        +-context[:Context]
+        
+        ++setSong()
+        ++play()
+        ++stop()
+        ++pause()
+        ++isPlaying()
+        ++seekTo()
+    }
+    
+    class Sprite{
+      +-speed[:int]
+      +-x[:int]
+      +-y[:int]
+      +-image[:Bitmap]
+      +-posX[:int]
+      +-posY[:int]
+      +-directionX[:int]
+      +-directionY[:int]
+    }
+
+}
+
+
+Vista <|--|>Model
+Model <|--|>Controlador
+Controlador <|--|>Vista
+
+MainActivity "1" --> "1" GameActivity: crea
+MainActivity "1" --> "1" OptionsActivity: s'accedeix a
+Sprite "1.." --> "1" GameData: son continguts a
+Person "1" --> "1.." Sprite: hereda de
+Throne "1" --> "1" Sprite: hereda de
+Background "1.." --> "1" Sprite: hereda de
+GameActivity "1" <--> "1" GameOverActivity: pot originar
+
+
+@enduml
